@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="template :: head"></head>
+<body>
+<div th:replace="template :: navigation"></div>
+<div th:replace="template :: header"></div>
+
+<div class="bg-light">
+    <div class="container py-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Recipes search</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" th:action="@{/recipes}">
+                    <div class="form-group">
+                        <label for="ingredients">Ingredients</label>
+                        <input type="text" class="form-control" id="ingredients" name="ingredients" aria-describedby="ingredientsHelp" placeholder="Add ingredients" />
+                        <small id="ingredientsHelp" class="form-text text-muted">Multiple ingredients can be separated with comma.</small>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Search</button>
+                </form>
+            </div>
+        </div>
+        <div th:if="${recipeSearch}" class="mt-4">
+            <div class="row">
+                <div class="col-sm-12 col-md-6 col-lg-6 pb-4" th:each="recipe,iterator : ${recipeSearch.recipes}">
+                    <div class="card box-shadow" style="border-color:#AAAAAA;">
+                        <div align="center" style="background-color: #AAAAAA;">
+                            <img th:src="${recipe.image_url}" alt="Recipe"/>
+                        </div>
+                        <div class="card-body">
+                            <h4 align="center" th:text="${recipe.title}" />
+                            <h5 th:text="'Publisher: ' + ${recipe.source}" />
+                            <h5 th:text="'Number of meals: ' + ${recipe.number_of_meals}" />
+                            <h5 th:text="'Cooking time: ' + ${recipe.cooking_time}" />
+
+                            <div class="modal fade" th:id="'myModal' + ${iterator.index}">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Ingredients</h4>
+                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        </div>
+                                        <div class="modal-body py-4">
+                                            <li th:each="ingredient : ${recipe.ingredients}" th:text="${ingredient}" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="btn-toolbar">
+                                <button data-toggle="modal" th:attr="data-target='#myModal' + ${iterator.index}" type="button" class="btn btn-secondary mr-1 mt-2">Ingredients</button>
+                                <a th:href="@{${recipe.recipe_url}}" target="_blank" role="button" class="btn btn-secondary mt-2">Recipe</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a th:if="${recipeSearch.has_more_recipes}" role="button" class="btn btn-secondary btn-lg btn-block"
+               th:href="@{'/recipes/' + ${recipeSearch.query} + '/' + ${recipeSearch.from + 10} + '/' + ${recipeSearch.to + 10}}">Next results</a>
+        </div>
+    </div>
+</div>
+
+<div th:replace="template :: footer"></div>
+</body>
+</html>

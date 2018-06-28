@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="template :: head">
+</head>
+<body>
+<div th:replace="template :: navigation"></div>
+<div th:replace="template :: header"></div>
+
+<div class="bg-light">
+    <div class="container py-4">
+        <div class="card">
+            <div class="card-header">
+                <div th:if="${placeDetails.placeID != null}">
+                    <h5 class="card-title" th:text="${placeDetails.name}">...</h5>
+                </div>
+                <div th:if="${placeDetails.placeID == null}">
+                    <h3>Opsss!</h3>
+                </div>
+            </div>
+            <div class="card-body box-shadow">
+                <div th:if="${placeDetails.placeID != null}">
+                    <div th:if="${placeDetails.photos != null}" id="carouselExampleControls" class="carousel slide mb-4" data-ride="carousel">
+                        <ol class="carousel-indicators">
+                            <li th:each="photo,iterator : ${placeDetails.photos}" data-target="#carouselExampleIndicators" th:classappend="${iterator.index == 0} ? 'active' : ''"></li>
+                        </ol>
+
+                        <div class="carousel-inner">
+                            <div style="background-color:gray;" th:each="photo,iterator : ${placeDetails.photos}" class="carousel-item" th:classappend="${iterator.index == 0} ? 'active' : ''" align="center">
+                                <img class="d-block" height="400px" th:src="@{${photo.toString()}}" alt="First slide" />
+                            </div>
+                        </div>
+                        <a th:if="${placeDetails.photos != null}" class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a th:if="${placeDetails.photos != null}" class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+
+                    <div id="map" class="mb-4" style="height: 400px; width: 100%;"/>
+
+                    <input type="hidden" id="lat" th:value="${placeDetails.location.latitude}" />
+                    <input type="hidden" id="lng" th:value="${placeDetails.location.longitude}" />
+
+                    <table>
+                        <tr valign="top" th:if="${placeDetails.address != null}">
+                            <td class="pb-4">
+                                <span class="pr-4" style="font-weight: bold; font-size: 20px;">Adresa: </span>
+                            </td>
+                            <td class="pb-4">
+                                <span style="font-size: 20px;" th:text="${placeDetails.address}" />
+                            </td>
+                        </tr>
+                        <tr valign="top" th:if="${placeDetails.phoneNumber != null}">
+                            <td class="pb-4">
+                                <span class="pr-4" style="font-weight: bold; font-size: 20px;">Broj telefona: </span>
+                            </td>
+                            <td class="pb-4">
+                                <span style="font-size: 20px;" th:text="${placeDetails.phoneNumber}" />
+                            </td>
+                        </tr>
+                        <tr valign="top" th:if="${placeDetails.rating != null}">
+                            <td class="pb-4">
+                                <span class="pr-4" style="font-weight: bold; font-size: 20px;">Raiting: </span>
+                            </td>
+                            <td class="pb-4">
+                                <span style="font-size: 20px;" th:text="${placeDetails.rating}" />
+                            </td>
+                        </tr>
+                        <tr valign="top" th:if="${placeDetails.website != null}">
+                            <td class="pb-4">
+                                <span class="pr-4" style="font-weight: bold; font-size: 20px;">Website: </span>
+                            </td>
+                            <td class="pb-4">
+                                <a style="font-size: 20px;" target="_blank" th:href="@{${placeDetails.website}}" th:text="${placeDetails.website}"/>
+                            </td>
+                        </tr>
+                        <tr valign="top" th:if="${placeDetails.workingHours != null}" >
+                            <td>
+                                <span class="pr-4" style="font-weight: bold; font-size: 20px;">Working hours: </span>
+                            </td>
+                            <td>
+                                <p style="font-size: 20px;" th:each="hour : ${placeDetails.workingHours}" th:text="${hour}" />
+                            </td>
+                        </tr>
+                    </table>
+
+                    <script th:src="@{/js/initMap.js}"></script>
+                    <script async="async" defer="defer" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDFMup7pevJQYQSBXaVhw5ryt4viLBn0P0&amp;callback=initMap"></script>
+                </div>
+                <div th:if="${placeDetails.placeID == null}">
+                    <h3>Place not found!</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="template :: footer"></div>
+</body>
+</html>

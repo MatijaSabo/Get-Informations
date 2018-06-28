@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="template :: head"></head>
+<body>
+<div th:replace="template :: navigation"></div>
+<div th:replace="template :: header"></div>
+
+<div class="bg-light">
+    <div class="container py-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Weather</h5>
+            </div>
+            <div class="card-body">
+                <form method="post" th:action="@{/weather}">
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <input type="text" class="form-control" id="address" name="address" placeholder="Address of location"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="type">Data type</label>
+                        <select class="form-control" id="type" name="type">
+                            <option value="current">Current weather</option>
+                            <option value="fiveDays">Five days weather</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Get data</button>
+                </form>
+            </div>
+        </div>
+
+        <div th:if="${current}" class="mt-4">
+            <div class="col-sm-12 col-md-6 offset-md-3 col-lg-4 offset-lg-4">
+                <div class="card box-shadow" style="border-color:#AAAAAA;">
+                    <div style="padding:80px; background-color:#AAAAAA;">
+                        <img class="card-img-top" th:src="@{${current.weatherIcon}}" alt="Card image cap" />
+                    </div>
+                    <div class="card-body">
+                        <h4 align="center" class="card-title" th:text="${current.weather}"/>
+                        <h5 th:text="${current.place}" />
+                        <h5 th:text="'Temperature: ' + ${current.temperature} + ' &#8451;'" />
+                        <h5 th:text="'Perssure: ' + ${current.pressure} + ' hPa'" />
+                        <h5 th:text="'Humidity: ' + ${current.humidity} + ' %'" />
+                        <h5 th:if="${current.windSpeed}" th:text="'Wind speed: ' + ${current.windSpeed} + ' m/sec'" />
+                        <h5 th:if="${current.rainQuantity}" th:text="'Rain quantity: ' + ${current.rainQuantity}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div th:if="${list}" class="mt-4">
+            <div class="row">
+                <div class="col-sm-12 col-md-6 col-lg-4 pb-4" th:each="item : ${list}">
+                    <div class="card box-shadow" style="border-color:#AAAAAA;">
+                        <div style="padding:80px; background-color:#AAAAAA;">
+                            <img class="card-img-top" th:src="@{${item.weatherIcon}}" alt="Card image cap" />
+                        </div>
+                        <div class="card-body">
+                            <h4 align="center" class="card-title" th:text="${item.weather}"/>
+                            <h5 th:text="${item.place}" />
+                            <h5 th:text="'Temperature: ' + ${item.temperature} + ' &#8451;'" />
+                            <h5 th:text="'Perssure: ' + ${item.pressure} + ' hPa'" />
+                            <h5 th:text="'Humidity: ' + ${item.humidity} + ' %'" />
+                            <h5 th:if="${item.windSpeed}" th:text="'Wind speed: ' + ${item.windSpeed} + ' m/sec'" />
+                            <h5 th:if="${item.rainQuantity}" th:text="'Rain quantity: ' + ${item.rainQuantity}" />
+                            <h5 th:text="'Date: ' + ${item.weather_dateString}" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="template :: footer"></div>
+</body>
+</html>
